@@ -1,51 +1,110 @@
-# Copyright (c) Streamlit Inc. (2018-2022) Snowflake Inc. (2022)
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import streamlit as st
-from streamlit.logger import get_logger
-
-LOGGER = get_logger(__name__)
-
-
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
-
-    st.write("# Welcome to Streamlit! 👋")
-
-    st.sidebar.success("Select a demo above.")
-
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+import numpy
+import pandas
+import math
+from PIL import Image
+from docx import Document
+import io
+import base64
 
 
-if __name__ == "__main__":
-    run()
+#Tạo file hướng dẫn làm
+def create_word_document(content):
+    doc = Document()
+    doc.add_paragraph(content)
+    return doc
+
+def get_binary_file_downloader_html(bin_file, file_label='File'):
+    data = bin_file.getvalue()
+    bin_str = base64.b64encode(data).decode()
+    href = f'<a href="data:application/vnd.openxmlformats-officedocument.wordprocessingml.document;base64,{bin_str}" download="{file_label}">Tải xuống file Word</a>'
+    return href
+
+
+#Đây là phần hearder
+st.title("Công cụ tính mô men quán tính")
+st.text("Đây là công cụ giúp các bạn tính moment một cách nhanh chóng với hình dạng phổ biến")
+st.caption("Developer by Phan Văn Thành")
+
+#Đây là phần sidebar
+hinh_dang = ["Chữ I","Chữ T","Chữ U", "Chữ C"]
+st.sidebar.header("Chọn hình dạng cấu kiện")
+cau_kien = st.sidebar.radio("Chọn hình dạng cấu kiện",hinh_dang)
+
+
+#Đây là phần thân
+cot1,cot2,cot3 = st.columns(3)
+with cot1:
+    if cau_kien == "Chữ I":
+        st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
+        image = Image.open('C:\\Users\\ungph\\Downloads\\I.jpg')
+        st.image(image)
+    elif cau_kien == "Chữ T":
+        st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
+        image = Image.open('C:\\Users\\ungph\\Downloads\\T.jpg')
+        st.image(image)
+    elif cau_kien == "Chữ U":
+        st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
+        image = Image.open('C:\\Users\\ungph\\Downloads\\U.jpg')
+        st.image(image)
+    elif cau_kien == "Chữ C":
+        st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
+        image = Image.open('C:\\Users\\ungph\\Downloads\\C.jpg')
+        st.image(image)
+
+with cot2 :
+    h_input = st.text_input("Nhập chiều cao h của cấu kiện (cm)")
+    b_input = st.text_input("Nhập chiều rộng b của cấu kiện (cm)")
+    c_input = st.text_input("Nhập chiều dày c của cấu kiện (cm)")
+    f_input = st.text_input("Nhập chiều dày f của cấu kiện (cm)")
+
+    
+with cot3:
+    try:
+        h = float(h_input)
+        b = float(b_input)
+        c = float(c_input)
+        f = float(f_input)
+        
+        if cau_kien == "Chữ I":
+            Ix = 2 * ((b * (c ** 3)) / 12) + ((f * ((h-2*c) ** 3)) / 12)+(b*c)*2*(c/2+(h-2*c)/2)**2
+            Iy = 2 * ((c * (b ** 3)) / 12) + (((h-2*c) * (f ** 3)) / 12)
+            Ix = round(Ix,2)
+            Iy = round(Iy,2)
+            st.write(f"moment quán tính Ix là {Ix} (cm^4)")
+            st.write(f"moment quán tính Iy là {Iy} (cm^4)")
+            if st.button('Tải xuống bài hướng dẫn'):
+                doc = create_word_document(f"Do là hình đối xứng theo phương x và phương y nên không cần tìm trọng tâm\n Ta chia hình thành ba khối hình chữ nhật để sử dụng công thức moment đối với hình chữ nhật\n Ở đây anh đã chia ba hình như hình minh họa\n {image}\n anh áp dụng công thức Ix=b*h^3/12")
+                buf = io.BytesIO()
+                doc.save(buf)
+                buf.seek(0)
+                st.markdown(get_binary_file_downloader_html(buf, 'Word_Document.docx'), unsafe_allow_html=True)
+
+        elif cau_kien == "Chữ T":
+            y = (b*c*(c/2+(h-c))+f*(h-c)*(h-c)/2)/(b*c+f*(h-c))
+            Ix = 1/12*f*(h-c)**3+f*(h-c)*((h-c)/2-y)**2+(b*c**3)/12+b*c*((h-c)+c/2-y)**2
+            Iy = ((h-c)*f**3)/12+b**3*c/12
+            Ix = round(Ix,2)
+            Iy = round(Iy,2)
+            st.write(f"moment quán tính Ix là {Ix} (cm^4)")
+            st.write(f"moment quán tính Iy là {Iy} (cm^4)")
+        elif cau_kien == "Chữ U":
+            y = (b*c*c/2+2*f*(h-c)*((h-c)/2+c))/(b*c+2*f*(h-c))
+            Ix = 1/12*b*c**3+b*c*(y-c/2)**2+2*(1/12*f*(h-c)**3+f*(h-c)*((h-c)/2+c-y)**2)
+            Iy = 1/12*c*b**3+2*(1/12*h*f**3+(h-c)*f*(b/2-f/2)**2)
+            Ix = round(Ix,2)
+            Iy = round(Iy,2)
+            st.write(f"moment quán tính Ix là {Ix} (cm^4)")
+            st.write(f"moment quán tính Iy là {Iy} (cm^4)")
+
+        elif cau_kien == "Chữ C":
+            y = (2*b*c*b/2+(h-2*c)*f*(h-2*c)/2)/(2*b*c+(h-2*c)*f)
+            Ix = 1/12*f*(h-2*c)**3+2*(1/12*b*c**3+b*c*(c/2+(h-2*c)/2)**2)
+            Iy = 1/12*(h-2*c)*f**3+(h-2*c)*f*((h-2*c)/2-y)+2*(1/12*c*b**3+c*b*(b/2-y)**2)
+            Ix = round(Ix,2)
+            Iy = round(Iy,2)
+            st.write(f"moment quán tính Ix là {Ix} (cm^4)")
+            st.write(f"moment quán tính Iy là {Iy} (cm^4)")
+    except ValueError:
+        st.warning("Vui lòng nhập các thông số hợp lệ.")
+    
