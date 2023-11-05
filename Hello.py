@@ -41,15 +41,15 @@ with cot1:
         st.image(image)
     elif cau_kien == "Chữ T":
         st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
-        image = Image.open('C:\\Users\\ungph\\Downloads\\T.jpg')
+        image = Image.open('T.jpg')
         st.image(image)
     elif cau_kien == "Chữ U":
         st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
-        image = Image.open('C:\\Users\\ungph\\Downloads\\U.jpg')
+        image = Image.open('U.jpg')
         st.image(image)
     elif cau_kien == "Chữ C":
         st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
-        image = Image.open('C:\\Users\\ungph\\Downloads\\C.jpg')
+        image = Image.open('C.jpg')
         st.image(image)
 
 with cot2 :
