@@ -30,7 +30,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
 #Đây là phần hearder
 st.title("Công cụ tính mô men quán tính")
 st.text("Đây là công cụ giúp các bạn tính moment một cách nhanh chóng với hình dạng phổ biến")
-st.caption("Developer by Phan Văn Thành")
+st.caption("Developed by Phan Văn Thành")
 
 #Đây là phần sidebar
 hinh_dang = ["Chữ I","Chữ T","Chữ U", "Chữ C"]
