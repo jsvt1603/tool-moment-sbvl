@@ -37,7 +37,7 @@ cot1,cot2,cot3 = st.columns(3)
 with cot1:
     if cau_kien == "Chữ I":
         st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
-        image = Image.open('C:\\Users\\ungph\\Downloads\\I.jpg')
+        image = Image.open('I.jpg')
         st.image(image)
     elif cau_kien == "Chữ T":
         st.write("Đây là hình ảnh cấu kiện bạn đã chọn")
